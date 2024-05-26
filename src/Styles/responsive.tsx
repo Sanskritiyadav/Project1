@@ -1,5 +1,7 @@
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
+
+
 export const rS=(size:number) =>{
     return scale(size)
 }

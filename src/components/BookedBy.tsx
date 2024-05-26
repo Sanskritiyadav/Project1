@@ -1,39 +1,49 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, Pressable } from 'react-native'
 import React from 'react'
-import { rMS, rS, rV } from '../Styles/responsive'
+import { responsiveWidth, responsiveHeight, responsiveFontSize } from 'react-native-responsive-dimensions'
 
-const BookedBy = (closeModal:any) => {
-  return (
-   <View style={styles.container}>
-    <Text style={styles.title}>Booked By Nikhil Jha</Text>
-   </View>
-  )
+const BookedBy = ({ closeModal }: any) => {
+    return (
+        <Pressable onPress={closeModal}>
+            <View style={styles.container}>
+                <Text style={styles.title}>Booked By Nikhil Jha</Text>
+            </View>
+        </Pressable>
+    )
 }
 export default BookedBy
-const styles=StyleSheet.create({
-    container:{
-        flex:1,
-        backgroundColor:"#17737F",
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: "#17737F",
 
-        height:rV(125),
-        width:rS(270),
-        marginTop:rV(250),
-        marginLeft:rS(40),
-        marginBottom:rV(200),
-        borderRadius:rMS(5)
-        
+        height: "100%",
+        width: responsiveWidth(65),
+        padding: 10,
+        marginVertical: 230,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 1,
+        // marginTop:responsiveHeight(2),
+        // marginLeft:responsiveWidth(10),
+        // marginBottom:responsiveHeight(2),
+        borderRadius: 5
+
 
     },
-    title:{
-    
-        fontSize:rMS(20),
-        fontWeight:"700",
-        lineHeight:rV(35),
-        color:"#FFFFFF",
-        marginTop:rV(30),
-        marginLeft:rS(40),
-        alignItems:'center',
-        height:rV(107),
-        width:rS(165)
+    title: {
+        height: "100%",
+        width: "100%",
+        fontSize: 30,
+        fontWeight: "700",
+        color: "#FFFFFF",
+        // marginTop:rV(50),
+        // marginLeft:rS(70),
+        display: 'flex',
+        alignItems: 'center',
+        textAlign: 'center',
+        marginTop: responsiveHeight(15)
+        // height:rV(70),
+        // width:rS(147)
     }
 })

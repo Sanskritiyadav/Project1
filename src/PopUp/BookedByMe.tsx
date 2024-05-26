@@ -1,8 +1,60 @@
-import { View, Text, StyleSheet,Pressable,Image ,TextInput} from 'react-native'
-import React from 'react'
+import { View, Text, StyleSheet,Pressable,Image ,TextInput,Alert,Modal} from 'react-native'
+import React,{useState} from 'react'
 import { rV , rS , rMS } from '../Styles/responsive'
+import RadioForm from 'react-native-simple-radio-button';
+import { firebase } from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+import BuyersDetails from '../components/BuyersDetails';
 
-const BookedByMe = ({navigation,closeModal}:any) => {
+const GetModalByOptions = ({ currSector, chosenOption, closeModal }: any) => {
+  const currowner = currSector?.owner
+  console.log("Status",currSector)
+  
+  if (chosenOption === "yellow" || chosenOption==="grey"){
+    return <BuyersDetails currSector={currSector} closeModal={closeModal} currowner={currowner} chosenOption={chosenOption} />
+  }
+}
+
+
+const BookedByMe = ({currSector,closeModal}:any) => {
+  const currentUser = firebase.auth().currentUser;
+  console.log(currentUser)
+
+
+    const [chosenOption, setChosenOption] = useState(''); 
+    const ref = firestore().collection('Sectors');
+    const [modalVisible, setModalVisible] = useState(false);
+
+    const showModal = () => {
+      setModalVisible(true);
+    };
+    
+    //will store our current user options
+
+    const OnSubmit = () => {
+      if (chosenOption === 'red') {
+        ref
+          .doc(currSector.key)
+          .update({
+            owner: currentUser?.email || "",
+            Status: chosenOption
+          })
+          .then(() => {
+            Alert.alert('User updated!');
+          });
+  
+      } else if (chosenOption === 'yellow' || chosenOption === 'grey') {
+        showModal();
+       
+      } 
+  
+    }
+    const options = [
+        { label: 'Block', value: 'yellow' },
+        { label: 'Avialable', value: 'grey' },
+        { label: 'Sold', value: 'red' },
+      ]; 
+
     return (
         
         <View style={styles.container}>
@@ -20,26 +72,42 @@ const BookedByMe = ({navigation,closeModal}:any) => {
     
           <Text style={styles.text1}>Select Status</Text>  
     
-           
-          <View style={styles.Block}>
-            <Text style={styles.text2}>Block</Text>
-            </View> 
-            <View style={styles.Block}>
-            <Text style={styles.text2}>Available</Text>
-            </View> 
-            <View style={styles.Block}>
-            <Text style={styles.text2}>Sold</Text>
-            </View>    
+          <View style={styles.Block1}> 
+        <RadioForm
+        radio_props={options}
+        buttonColor='black'
+        initial={0} //initial value of this group
+        onPress={(value) => {
+          setChosenOption(value);
+        }} //if the user changes options, set the new value
+      />
+      </View>
+         
     
-            {/* <Button title={'Change Status'} onPress={()=>{Navigation.navigate("BuyersDetails")}} style={styles.Button}/> */}
-            <Pressable style={styles.Button} onPress={()=>{navigation.navigate("BuyersDetails")}}>
+            <Pressable style={styles.Button} onPress={OnSubmit}>
           <Text style={styles.text3}>Change Status</Text>
         </Pressable>
-        <Pressable style={styles.Button2} onPress={()=>{navigation.navigate("BuyersDetails")}}>
+        <Pressable style={styles.Button2} onPress={closeModal}>
           <Text style={styles.text3}>Modify Details</Text>
         </Pressable>
-    
+     </View>
+     <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            
+            <GetModalByOptions currSector={currSector} chosenOption={chosenOption} closeModal={closeModal} />
+
+            
           </View>
+        </View>
+      </Modal>
         </View>
         
       )
@@ -53,8 +121,8 @@ const styles=StyleSheet.create({
         height:rV(470),
         width:rS(236),
         backgroundColor:"#AAEDFB",
-        marginTop:rV(150),
-        marginLeft:rS(50),
+        // marginTop:rV(50),
+        // marginLeft:rS(50),
         borderRadius:rMS(15)
     },
     header:{
@@ -122,7 +190,7 @@ const styles=StyleSheet.create({
         alignItems:'center',
         color:"#FFFFFF",
         fontWeight:"600",
-        fontSize:rMS(14),
+        fontSize:rMS(12),
         marginTop:rV(-6),
         marginLeft:rS(16),
 
@@ -136,8 +204,37 @@ const styles=StyleSheet.create({
         backgroundColor:"#56698F",
         padding:10,
         marginBottom:rV(-60)
-    
-
+    },
+    Block1:{
+        height:rV(90),
+        width:rS(181),
+        marginTop:rV(12),
+        marginLeft:rS(30),
+        backgroundColor:"#FFFFFF",
+        borderRadius:rMS(5),
+    },
+    centeredView: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: 22,
+      padding: 0
+    },
+    modalView: {
+      alignItems: 'center',
+    },
+    button: {
+      borderRadius: 20,
+      padding: 10,
+      elevation: 2,
+    },
+    buttonClose: {
+      backgroundColor: '#2196F3',
+    },
+    textStyle: {
+      color: 'white',
+      fontWeight: 'bold',
+      textAlign: 'center',
     }
  
 })

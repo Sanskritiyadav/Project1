@@ -1,8 +1,12 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet ,Dimensions} from 'react-native'
 import React,{FC} from 'react'
 import { rMS, rS, rV } from '../Styles/responsive';
-// import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
-
+import {
+    responsiveHeight,
+    responsiveWidth,
+    responsiveFontSize
+  } from "react-native-responsive-dimensions";
+   
 
 interface Props{
     title:string
@@ -21,25 +25,21 @@ const MyButton :FC <Props> = ({title,onPress}) => {
 export default MyButton
 const styles=StyleSheet.create({
     container:{
-        height:rV(29),
-        width:rS(96),
+        
+        height:responsiveHeight(5),
+        width:responsiveWidth(30),
         justifyContent:"center",
         alignItems:"center",
         backgroundColor:"#56698F",
-        borderRadius:rMS(15),
-        marginTop:rV(10),
-        marginLeft:rS(100)
-        // 
+        borderRadius:responsiveWidth(15),
         
-        // height:rV(29),
-        // width:rS(96),
-        // marginTop:rV(443),
-        // marginLeft:rS(30),
-        // borderRadius:rMS(15)
+        
+
+        
     },
     title:{
         color:"#FFFFFF",
-        fontSize:rMS(20),
+        fontSize:responsiveFontSize(2),
         fontFamily:"Redressed-Regular"
     }
 
